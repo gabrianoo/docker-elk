@@ -3,15 +3,6 @@ MAINTAINER Ahmed Hassanien <eng.ahmedgaber@gmail.com>
 
 WORKDIR /opt
 
-# Setting the hostname
-## Backup original hostname
-RUN cp /etc/hostname /etc/hostname_BKP
-RUN echo "elk" > /etc/hostname
-RUN hostname -F /etc/hostname
-## Backup original hosts
-RUN cp /etc/hosts /etc/hosts_BKP
-RUN echo "127.0.1.1       elk.localhost.localdomain   elk" | tee -a /etc/hosts
-
 # Install Dependencies Redis and ELK
 ## Installing Apache2 Redis
 RUN apt-get update && apt-get install apache2 redis-server -y
