@@ -4,8 +4,8 @@ MAINTAINER Ahmed Hassanien <eng.ahmedgaber@gmail.com>
 WORKDIR /opt
 
 # Install Dependencies Redis and ELK
-## Installing Apache2 Redis
-RUN apt-get update && apt-get install apache2 redis-server -y
+## Installing WGet Apache2 Redis
+RUN apt-get update && apt-get install wget apache2 redis-server -y
 ## Installing JDK
 RUN wget --no-check-certificate --no-cookies --header "Cookie: oraclelicense=accept-securebackup-cookie" http://download.oracle.com/otn-pub/java/jdk/8u25-b17/jdk-8u25-linux-x64.tar.gz
 RUN tar xzf jdk-8u25-linux-x64.tar.gz
