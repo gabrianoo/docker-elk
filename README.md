@@ -5,7 +5,7 @@ To Run
 ------
 
 ```
-docker run -d --name elk -p 4000:4000 -p 8889:8889 gabrianoo/elk
+docker run -h elk -d --name elk -p 4000:4000 -p 8889:8889 gabrianoo/elk
 ```
 
 To build
@@ -19,7 +19,7 @@ docker build -t docker-elk-custom docker-elk
 then to run that
 
 ```
-docker run -d --name docker-elk -p 80:80 -p 6379:6379 docker-elk-custom
+docker run -h elk -d --name docker-elk -p 80:80 -p 6379:6379 docker-elk-custom
 ```
 
 TODO
