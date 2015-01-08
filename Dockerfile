@@ -10,7 +10,7 @@ RUN echo "elk" > /etc/hostname
 RUN hostname -F /etc/hostname
 ## Backup original hosts
 RUN cp /etc/hosts /etc/hosts_BKP
-RUN echo "127.0.1.1       elk.budapest.epam.com   elk" | tee -a /etc/hosts
+RUN echo "127.0.1.1       elk.localhost.localdomain   elk" | tee -a /etc/hosts
 
 # Install Dependencies Redis and ELK
 ## Installing Apache2 Redis
