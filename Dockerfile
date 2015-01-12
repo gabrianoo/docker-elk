@@ -4,7 +4,9 @@ MAINTAINER Ahmed Hassanien <eng.ahmedgaber@gmail.com>
 WORKDIR /opt
 
 # Prerequisites
+ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update
+RUN apt-get install --fix-missing
 RUN apt-get install -y wget
 
 # Install Java
@@ -35,23 +37,17 @@ ADD ./logstash/logstash-shipper.conf /etc/logstash/conf.d/logstash-shipper.conf
 ### Indexer configuration
 ADD ./logstash/logstash-indexer.conf /etc/logstash/conf.d/logstash-indexer.conf
 
-# Install Apache and Kibana and deploy Kibana to Apache2
-RUN apt-get install -y apache2
-RUN wget https://download.elasticsearch.org/kibana/kibana/kibana-3.1.2.tar.gz
-RUN tar xzf kibana-3.1.2.tar.gz
-RUN mkdir -p /var/www/html/kibana
-RUN cp -R /opt/kibana-3.1.2/* /var/www/html/kibana/
-
 # Install Supervisor
 RUN apt-get install -y supervisor
 ADD ./supervisor/elasticsearch.conf /etc/supervisor/conf.d/
 ADD ./supervisor/logstash.conf /etc/supervisor/conf.d/
-ADD ./supervisor/apache.conf /etc/supervisor/conf.d/
+ADD ./supervisor/kibana.conf /etc/supervisor/conf.d/
 ADD ./supervisor/redis.conf /etc/supervisor/conf.d/
 
-# Exposing Redis Server Port and Apache Server Port
+# Exposing Redis Server Port, Kibana Port and SYSLOG Port
 EXPOSE 6379
-EXPOSE 80
+EXPOSE 9292 
+EXPOSE 5000
 
 # Start supervisor
 CMD /usr/bin/supervisord -n -c /etc/supervisor/supervisord.conf
