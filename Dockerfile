@@ -26,7 +26,10 @@ RUN dpkg -i elasticsearch-1.4.2.deb
 RUN sed -i 's/#cluster.name: elasticsearch/cluster.name: elasticsearch/g' /etc/elasticsearch/elasticsearch.yml
 RUN sed -i 's/#node.name: "Franz Kafka"/node.name: "logstash"/g' /etc/elasticsearch/elasticsearch.yml
 ### Allow Kibana to connect to Elastic Search
-RUN echo -e "\nhttp.cors.allow-origin: \"/.*/\"\nhttp.cors.enabled: true" | tee -a /etc/elasticsearch/elasticsearch.yml
+RUN echo -e '\nhttp.cors.allow-origin: "/.*/"\nhttp.cors.enabled: true' | tee -a /etc/elasticsearch/elasticsearch.yml
+### Move elastic search configurations to the right place
+RUN mkdir /usr/share/elasticsearch/config
+RUN cp /etc/elasticsearch/*.yml /usr/share/elasticsearch/config
 
 # Install Log Stash
 RUN wget https://download.elasticsearch.org/logstash/logstash/packages/debian/logstash_1.4.2-1-2c0f5a1_all.deb
