@@ -18,7 +18,7 @@ RUN apt-get -y install redis-server
 ## Redis configuration
 RUN sed -i 's/bind 127.0.0.1/bind 0.0.0.0/g' /etc/redis/redis.conf
 
-## Install Elastic Search
+# Install Elastic Search
 RUN wget https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-1.4.2.deb
 RUN dpkg -i elasticsearch-1.4.2.deb
 ## Configuring Elastic Search
@@ -47,7 +47,7 @@ ADD ./supervisor/redis.conf /etc/supervisor/conf.d/
 # Exposing Redis Server Port, Kibana Port and SYSLOG Port
 EXPOSE 6379
 EXPOSE 9292 
-EXPOSE 5000
+EXPOSE 9200
 
 # Start supervisor
 CMD /usr/bin/supervisord -n -c /etc/supervisor/supervisord.conf
