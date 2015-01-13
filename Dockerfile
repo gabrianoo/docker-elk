@@ -36,8 +36,6 @@ RUN cp /etc/elasticsearch/*.yml /usr/share/elasticsearch/config
 RUN wget https://download.elasticsearch.org/logstash/logstash/packages/debian/logstash_1.4.2-1-2c0f5a1_all.deb
 RUN dpkg -i logstash_1.4.2-1-2c0f5a1_all.deb
 ## Configuring Log Stash
-### Shipper configuration
-ADD ./logstash/logstash-shipper.conf /etc/logstash/conf.d/logstash-shipper.conf
 ### Indexer configuration
 ADD ./logstash/logstash-indexer.conf /etc/logstash/conf.d/logstash-indexer.conf
 
