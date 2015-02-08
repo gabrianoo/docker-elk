@@ -4,23 +4,45 @@ MAINTAINER Ahmed Hassanien <eng.ahmedgaber@gmail.com>
 WORKDIR /opt
 
 # Prerequisites
+
+## Upgrade ubuntu to latest
 ENV DEBIAN_FRONTEND noninteractive
-RUN apt-get update
-RUN apt-get install --fix-missing
+RUN apt-get -q update
+RUN apt-get -yq upgrade
+
+## Install wget
 RUN apt-get install -y wget
 
-# Install Java
-RUN apt-get -y install openjdk-7-jre-headless
+## Install Software Properties Common to use add-apt-repository command
+RUN apt-get -yq install software-properties-common
+
+## Add ELK key to ubuntu repository
+RUN wget -qO - https://packages.elasticsearch.org/GPG-KEY-elasticsearch | sudo apt-key add -
+## Add Elastic Search Repository to Ubuntu
+RUN add-apt-repository "deb http://packages.elasticsearch.org/elasticsearch/1.4/debian stable main"
+## Add Log Stash Repository to Ubuntu
+RUN add-apt-repository "deb http://packages.elasticsearch.org/logstash/1.4/debian stable main"
+## Add Oracle Java 8 Repository to Ubuntu
+RUN echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | debconf-set-selections
+RUN add-apt-repository -y ppa:webupd8team/java
+
+## Update after changing the sources list
+RUN apt-get -q update
+
+## Install Oracle Java 8
+RUN apt-get -yq install oracle-java8-installer
+## Set JAVA_HOME variable
+ENV JAVA_HOME /usr/lib/jvm/java-8-oracle
+
+# Installing the ELK stack
 
 # Install Redis
-RUN apt-get -y install redis-server
-# Configuring Applications
-## Redis configuration
+RUN apt-get -yq install redis-server
+# Redis configuration
 RUN sed -i 's/bind 127.0.0.1/bind 0.0.0.0/g' /etc/redis/redis.conf
 
 # Install Elastic Search
-RUN wget https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-1.4.2.deb
-RUN dpkg -i elasticsearch-1.4.2.deb
+RUN apt-get -yq install elasticsearch
 ## Configuring Elastic Search
 ### Add cluster name and Add node name
 RUN sed -i 's/#cluster.name: elasticsearch/cluster.name: elasticsearch/g' /etc/elasticsearch/elasticsearch.yml
@@ -33,18 +55,22 @@ RUN mkdir /usr/share/elasticsearch/config
 RUN cp /etc/elasticsearch/*.yml /usr/share/elasticsearch/config
 
 # Install Log Stash
-RUN wget https://download.elasticsearch.org/logstash/logstash/packages/debian/logstash_1.4.2-1-2c0f5a1_all.deb
-RUN dpkg -i logstash_1.4.2-1-2c0f5a1_all.deb
+RUN apt-get -yq install logstash
 ## Configuring Log Stash
 ### Indexer configuration
 ADD ./logstash/logstash-indexer.conf /etc/logstash/conf.d/logstash-indexer.conf
 
 # Install Supervisor
-RUN apt-get install -y supervisor
+RUN apt-get -yq install supervisor software-properties-common
 ADD ./supervisor/elasticsearch.conf /etc/supervisor/conf.d/
 ADD ./supervisor/logstash.conf /etc/supervisor/conf.d/
 ADD ./supervisor/kibana.conf /etc/supervisor/conf.d/
 ADD ./supervisor/redis.conf /etc/supervisor/conf.d/
+
+# Remove unwanted applications & Clean Installations
+RUN apt-get remove -yq wget software-properties-common
+RUN apt-get clean
+RUN rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Exposing Redis Server Port, Kibana Port and SYSLOG Port
 EXPOSE 6379
