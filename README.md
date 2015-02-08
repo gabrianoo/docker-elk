@@ -5,7 +5,7 @@ To Run
 ------
 
 ```
-docker run -h elk -d --name elk -p 9292:9292 -p 9200:9200 -p 6379:6379 gabrianoo/elk
+docker run -h elk -d --name elk -p 9292:9292 -p 9200:9200 -p 6379:6379 otasys/elk-redis
 ```
 
 To build
