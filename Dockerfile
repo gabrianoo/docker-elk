@@ -9,10 +9,8 @@ WORKDIR /opt
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get -q update
 RUN apt-get -yq upgrade
-
 ## Install wget
-RUN apt-get install -y wget
-
+RUN apt-get install -yq wget
 ## Install Software Properties Common to use add-apt-repository command
 RUN apt-get -yq install software-properties-common
 
@@ -68,7 +66,6 @@ ADD ./supervisor/kibana.conf /etc/supervisor/conf.d/
 ADD ./supervisor/redis.conf /etc/supervisor/conf.d/
 
 # Remove unwanted applications & Clean Installations
-RUN apt-get remove -yq wget software-properties-common
 RUN apt-get clean
 RUN rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
