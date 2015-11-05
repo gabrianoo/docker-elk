@@ -1,4 +1,4 @@
-FROM ubuntu:14.04
+FROM otasys/java:1.8.0_66
 MAINTAINER Ahmed Hassanien <eng.ahmedgaber@gmail.com>
 
 WORKDIR /opt
@@ -7,12 +7,6 @@ WORKDIR /opt
 
 ## Upgrade ubuntu to latest
 ENV DEBIAN_FRONTEND noninteractive
-RUN apt-get -q update
-RUN apt-get -yq upgrade
-## Install wget
-RUN apt-get install -yq wget
-## Install Software Properties Common to use add-apt-repository command
-RUN apt-get -yq install software-properties-common
 
 ## Add ELK key to ubuntu repository
 RUN wget -qO - https://packages.elasticsearch.org/GPG-KEY-elasticsearch | sudo apt-key add -
@@ -26,11 +20,6 @@ RUN add-apt-repository -y ppa:webupd8team/java
 
 ## Update after changing the sources list
 RUN apt-get -q update
-
-## Install Oracle Java 8
-RUN apt-get -yq install oracle-java8-installer
-## Set JAVA_HOME variable
-ENV JAVA_HOME /usr/lib/jvm/java-8-oracle
 
 # Installing the ELK stack
 
@@ -59,7 +48,7 @@ RUN apt-get -yq install logstash
 ADD ./logstash/logstash-indexer.conf /etc/logstash/conf.d/logstash-indexer.conf
 
 # Install Supervisor
-RUN apt-get -yq install supervisor software-properties-common
+RUN apt-get -yq install supervisor
 ADD ./supervisor/elasticsearch.conf /etc/supervisor/conf.d/
 ADD ./supervisor/logstash.conf /etc/supervisor/conf.d/
 ADD ./supervisor/kibana.conf /etc/supervisor/conf.d/
